@@ -220,11 +220,13 @@ export function DesertMap({ specialty, selectedState, onStateClick }: DesertMapP
       }
     };
 
+    map.on("style.load", addLayers);
     map.on("load", addLayers);
-    // Fallback: if 'load' already fired (race), bootstrap manually
-    if (map.loaded()) addLayers();
 
     mapRef.current = map;
+    // Force initial resize after mount
+    requestAnimationFrame(() => map.resize());
+    setTimeout(() => map.resize(), 200);
 
     // Keep map sized correctly when its container resizes
     const ro = new ResizeObserver(() => map.resize());
